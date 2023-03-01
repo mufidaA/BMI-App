@@ -3,7 +3,6 @@ package com.example.bmi
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,11 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bmi.ui.theme.BmiTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,12 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Bmi () {
-    var heightInput: String by remember { mutableStateOf("" ) }
-    var weightInput: String by remember { mutableStateOf("" ) }
-    val height = heightInput.toFloatOrNull() ?: 0.0f
-    val weight = weightInput.toIntOrNull() ?: 0
-    val bmi = if (weight > 0 && height >0) weight / (height *height) else 0.0
+fun Bmi (bmiViewModel: BmiViewModel= viewModel()) {
     Column {
         Text (
             text = "Body mass index",
@@ -57,22 +53,22 @@ fun Bmi () {
             modifier = Modifier.run { fillMaxWidth().padding(top = 16.dp,bottom= 16.dp) }
         )
         OutlinedTextField  (
-            value = heightInput,
-            onValueChange = {heightInput = it.replace(  ',',    '.' )},
+            value = bmiViewModel.heightInput,
+            onValueChange = {bmiViewModel.heightInput = it.replace(  ',',    '.' )},
             label = { Text ("Height" )},
             singleLine= true,
             keyboardOptions =  KeyboardOptions (keyboardType = KeyboardType.Number)
         )
         OutlinedTextField (
-            value = weightInput,
-            onValueChange = {weightInput = it.replace(   ',',  '.')},
+            value = bmiViewModel.weightInput,
+            onValueChange = {bmiViewModel.weightInput = it.replace(   ',',  '.')},
             label = {Text( "Weight")},
             singleLine = true,
             keyboardOptions = KeyboardOptions (keyboardType =
             KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
-        Text ( "Body mass index is " + bmi)
+        Text ( text = stringResource(R.string.body_mass_index))
 
     }
 }
